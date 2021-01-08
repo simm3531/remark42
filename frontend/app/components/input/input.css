@@ -1,9 +1,11 @@
 .input {
-  font-size: 16px;
-  font-family: inherit;
-  padding: 4px 8px;
+  width: 100%;
+  box-sizing: border-box;
   border: 1px solid var(--color31);
   margin: 0;
+  padding: 4px 8px;
+  font-size: 16px;
+  font-family: inherit;
 
   &:focus {
     box-shadow: 0 0 0 2px var(--color47);

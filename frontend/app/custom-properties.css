@@ -59,4 +59,9 @@
   --chroma-05: #859900;
   --chroma-06: #d33682;
   --chroma-07: #00aee2;
+
+  /* Named variables */
+  --primary-color: 37, 156, 154;
+  --white-color: 255, 255, 255;
+  --error-color: #9a0000;
 }

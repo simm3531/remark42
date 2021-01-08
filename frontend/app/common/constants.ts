@@ -13,6 +13,7 @@ export const PROVIDER_NAMES: { [P in AuthProvider['name']]: string } = {
   facebook: 'Facebook',
   github: 'GitHub',
   yandex: 'Yandex',
+  microsoft: 'Microsoft',
   dev: 'Dev',
   anonymous: 'Anonymous',
   email: 'Email',

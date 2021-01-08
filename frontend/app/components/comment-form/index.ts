@@ -18,7 +18,6 @@ import './__preview-wrapper/comment-form__preview-wrapper.css';
 import './__rss/comment-form__rss.css';
 import './__rss-link/comment-form__rss-link.css';
 import './__markdown/comment-form__markdown.css';
-import './__markdown-link/comment-form__markdown-link.css';
 import './__markdown-toolbar/comment-form__markdown-toolbar.css';
 import './__subscribe-by-email/comment-form__subscribe-by-email.css';
 import './__subscribe-by-rss/comment-form__subscribe-by-rss.css';

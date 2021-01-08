@@ -1,0 +1,19 @@
+.root {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.label {
+  margin-bottom: 4px;
+}
+
+.error {
+  margin-top: 4px;
+  color: var(--error-color);
+}
+
+.submit {
+  display: flex;
+  justify-content: center;
+}

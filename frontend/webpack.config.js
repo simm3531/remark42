@@ -32,7 +32,7 @@ const exclude = [
   'react-intl',
   'intl-messageformat',
   'intl-messageformat-parser',
-].map(m => path.resolve(__dirname, 'node_modules', m));
+].map((m) => path.resolve(__dirname, 'node_modules', m));
 
 const htmlMinifyOptions = {
   minifyCSS: true,
@@ -86,7 +86,7 @@ module.exports = (_, { mode, analyze }) => {
     },
   };
 
-  const getTsRule = (babelEnvConfig = {}) => {
+  const getTsRule = (babelConfig = {}) => {
     return {
       test: /\.tsx?$/,
       exclude: /node_modules/,
@@ -96,7 +96,7 @@ module.exports = (_, { mode, analyze }) => {
           options: {
             exclude,
             cacheDirectory: true,
-            ...babelEnvConfig,
+            ...babelConfig,
           },
         },
         {
@@ -160,7 +160,7 @@ module.exports = (_, { mode, analyze }) => {
   };
 
   const urlRule = {
-    test: /\.(png|jpg|jpeg|gif|svg)$/,
+    test: /\.(png|jpg|jpeg|gif)$/,
     exclude: /node_modules/,
     use: {
       loader: 'url-loader',
@@ -172,7 +172,12 @@ module.exports = (_, { mode, analyze }) => {
     },
   };
 
-  const rules = [cssRule, cssModulesRule, urlRule];
+  const svgRule = {
+    test: /\.svg$/,
+    use: ['@svgr/webpack', 'file-loader'],
+  };
+
+  const rules = [cssRule, cssModulesRule, svgRule, urlRule];
 
   const devServer = {
     port: PORT,
@@ -184,7 +189,7 @@ module.exports = (_, { mode, analyze }) => {
     hot: true,
     compress: true,
     clientLogLevel: 'none',
-    overlay: false,
+    overlay: true,
     stats: 'minimal',
     watchOptions: {
       ignored: [PUBLIC_FOLDER_PATH, path.resolve(__dirname, 'node_modules')],
@@ -196,7 +201,7 @@ module.exports = (_, { mode, analyze }) => {
   };
 
   const plugins = [
-    ...(isDev ? [new CleanWebpackPlugin(), new RefreshPlugin(), new webpack.HotModuleReplacementPlugin()] : []),
+    ...(isDev ? [new CleanWebpackPlugin(), new webpack.HotModuleReplacementPlugin(), new RefreshPlugin()] : []),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(mode),
       'process.env.REMARK_NODE': JSON.stringify(NODE_ID),
@@ -246,7 +251,13 @@ module.exports = (_, { mode, analyze }) => {
       chunkFilename: '[name].mjs',
     },
     module: {
-      rules: [getTsRule(babelConfig.env.modern), ...rules],
+      rules: [
+        getTsRule({
+          ...babelConfig.env.modern,
+          plugins: [...babelConfig.env.modern.plugins, '@prefresh/babel-plugin'],
+        }),
+        ...rules,
+      ],
     },
     plugins: [
       ...plugins,

@@ -1,6 +1,7 @@
-import { h, Component, createRef, Fragment } from 'preact';
+import { h, Fragment, Component, createRef } from 'preact';
 import { FormattedMessage, IntlShape, defineMessages } from 'react-intl';
 import b, { Mix } from 'bem-react-helper';
+import classnames from 'classnames';
 
 import { User, Theme, Image, ApiError } from 'common/types';
 import { StaticStore } from 'common/static-store';
@@ -20,6 +21,8 @@ import { SubscribeByRSS } from './__subscribe-by-rss';
 import MarkdownToolbar from './markdown-toolbar';
 import TextareaAutosize from './textarea-autosize';
 import { TextExpander } from './text-expander';
+import { ReactComponent as MarkdownIcon } from './assets/markdown.svg';
+import styles from './comment-form.module.css';
 
 let textareaId = 0;
 
@@ -95,6 +98,10 @@ export const messages = defineMessages({
     id: 'commentForm.anonymous-uploading-disabled',
     defaultMessage:
       'Image uploading is disabled for anonymous users. Please log in not as anonymous user to be able to attach images.',
+  },
+  markdownSupport: {
+    id: 'commentForm.notice-about-styling',
+    defaultMessage: 'Styling with Markdown is supported',
   },
 });
 
@@ -214,7 +221,7 @@ export class CommentForm extends Component<CommentFormProps, CommentFormState> {
     this.setState({ isDisabled: true, isErrorShown: false, text });
     try {
       await this.props.onSubmit(text, pageTitle || document.title);
-      updateJsonItem<Record<string, string>>(LS_SAVED_COMMENT_VALUE, data => {
+      updateJsonItem<Record<string, string>>(LS_SAVED_COMMENT_VALUE, (data) => {
         delete data[this.props.id];
 
         return data;
@@ -239,7 +246,7 @@ export class CommentForm extends Component<CommentFormProps, CommentFormState> {
 
     this.props
       .getPreview(text)
-      .then(preview => this.setState({ preview }))
+      .then((preview) => this.setState({ preview }))
       .catch(() => {
         this.setState({ isErrorShown: true, errorMessage: null });
       });
@@ -267,7 +274,7 @@ export class CommentForm extends Component<CommentFormProps, CommentFormState> {
     if (!this.textAreaRef) return;
     if (!e.dataTransfer) return;
     const items = Array.from(e.dataTransfer.items);
-    if (Array.from(items).filter(i => i.kind === 'file' && ImageMimeRegex.test(i.type)).length === 0) return;
+    if (Array.from(items).filter((i) => i.kind === 'file' && ImageMimeRegex.test(i.type)).length === 0) return;
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
   }
@@ -287,7 +294,7 @@ export class CommentForm extends Component<CommentFormProps, CommentFormState> {
     if (StaticStore.config.max_image_size === 0) return;
     if (!e.dataTransfer) return;
 
-    const data = Array.from(e.dataTransfer.files).filter(f => ImageMimeRegex.test(f.type));
+    const data = Array.from(e.dataTransfer.files).filter((f) => ImageMimeRegex.test(f.type));
     if (data.length === 0) return;
 
     e.preventDefault();
@@ -425,19 +432,14 @@ export class CommentForm extends Component<CommentFormProps, CommentFormState> {
   }
 
   renderMarkdownTip = () => (
-    <div className="comment-form__markdown">
-      <FormattedMessage
-        id="commentForm.notice-about-styling"
-        defaultMessage="Styling with <a>Markdown</a> is supported"
-        values={{
-          a: (title: string) => (
-            <a class="comment-form__markdown-link" target="_blank" href="markdown-help.html">
-              {title}
-            </a>
-          ),
-        }}
-      />
-    </div>
+    <a
+      className={classnames('markdown-link', styles.markdownTip)}
+      target="_blank"
+      href="markdown-help.html"
+      title={this.props.intl.formatMessage(messages.markdownSupport)}
+    >
+      <MarkdownIcon className={classnames('markdown-link-icon', styles.markdownTipIcon)} />
+    </a>
   );
 
   render() {
@@ -497,7 +499,7 @@ export class CommentForm extends Component<CommentFormProps, CommentFormState> {
         </div>
 
         {(isErrorShown || !!errorMessage) &&
-          (errorMessage || intl.formatMessage(messages.unexpectedError)).split('\n').map(e => (
+          (errorMessage || intl.formatMessage(messages.unexpectedError)).split('\n').map((e) => (
             <p className="comment-form__error" role="alert" key={e}>
               {e}
             </p>

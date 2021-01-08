@@ -1,0 +1,12 @@
+.markdownTip {
+  text-decoration: none;
+  color: var(--color37);
+
+  &:hover {
+    color: var(--color33);
+  }
+}
+
+.markdownTipIcon {
+  width: 20px;
+}

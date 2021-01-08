@@ -1,3 +1,3 @@
 import './input.css';
 
-export { Input } from './input';
+export { Input as default, Input } from './input';

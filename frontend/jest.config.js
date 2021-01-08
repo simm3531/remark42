@@ -6,6 +6,7 @@ module.exports = {
   moduleDirectories: ['node_modules', 'app'],
   moduleNameMapper: {
     '\\.css': 'identity-obj-proxy',
+    '\\.svg': '<rootDir>/app/__stubs__/svg.tsx',
     '^react$': 'preact/compat',
     '^react-dom$': 'preact/compat',
     /**
