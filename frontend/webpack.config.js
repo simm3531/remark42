@@ -254,7 +254,7 @@ module.exports = (_, { mode, analyze }) => {
       rules: [
         getTsRule({
           ...babelConfig.env.modern,
-          plugins: [...babelConfig.env.modern.plugins, '@prefresh/babel-plugin'],
+          plugins: [...babelConfig.env.modern.plugins, ...(isDev ? ['@prefresh/babel-plugin'] : [])],
         }),
         ...rules,
       ],
