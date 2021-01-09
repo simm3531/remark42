@@ -9,8 +9,6 @@ import type { User } from 'common/types';
 import enMessages from 'locales/en.json';
 
 import AuthPanel, { Props } from './auth-panel';
-import { Button } from '../button';
-import { StaticStore } from 'common/static-store';
 
 const DefaultProps = {
   postInfo: {
@@ -68,23 +66,23 @@ describe('<AuthPanel />', () => {
       expect(adminAction.text()).toEqual('Show settings');
     });
 
-    it('should render auth for read only post', () => {
-      StaticStore.config.auth_providers = ['google', 'github'];
+    // it('should render auth for read only post', () => {
+    //   StaticStore.config.auth_providers = ['google', 'github'];
 
-      const element = createWrapper({
-        ...DefaultProps,
-        user: null,
-        postInfo: { ...DefaultProps.postInfo, read_only: true },
-        hiddenUsers: { hidden_joe: {} as User },
-      } as Props);
+    //   const element = createWrapper({
+    //     ...DefaultProps,
+    //     user: null,
+    //     postInfo: { ...DefaultProps.postInfo, read_only: true },
+    //     hiddenUsers: { hidden_joe: {} as User },
+    //   } as Props);
 
-      const firstCol = element.find('.auth-panel__column').first();
-      const providerButtons = firstCol.find(Button);
+    //   const firstCol = element.find('.auth-panel__column').first();
+    //   const providerButtons = firstCol.find(Button);
 
-      expect(firstCol.text().startsWith('Login:')).toBe(true);
-      expect(providerButtons.at(0).text()).toBe('Google');
-      expect(providerButtons.at(1).text()).toBe('GitHub');
-    });
+    //   expect(firstCol.text().startsWith('Login:')).toBe(true);
+    //   expect(providerButtons.at(0).text()).toBe('Google');
+    //   expect(providerButtons.at(1).text()).toBe('GitHub');
+    // });
   });
 
   describe('For authorized user', () => {

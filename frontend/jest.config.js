@@ -13,8 +13,8 @@ module.exports = {
      * "transformIgnorePatterns" just don't work for modules down below
      * If you know how to handle it better PR welcome
      */
-    // '^@github/markdown-toolbar-element$': 'identity-obj-proxy',
-    // '^@github/text-expander-element$': 'identity-obj-proxy',
+    '^@github/markdown-toolbar-element$': 'identity-obj-proxy',
+    '^@github/text-expander-element$': 'identity-obj-proxy',
   },
   setupFiles: ['<rootDir>/jest.setup.ts'],
   setupFilesAfterEnv: [

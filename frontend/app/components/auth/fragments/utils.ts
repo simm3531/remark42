@@ -1,6 +1,7 @@
-import { values } from 'lodash-es';
 import { MessageDescriptor } from 'react-intl';
+
 import { isJwtExpired } from 'utils/jwt';
+
 import messages from './messsages';
 
 const MIN_LENGTH = 3;
@@ -28,7 +29,7 @@ export function getEmailInvalidReason(email: string): MessageDescriptor | null {
 }
 
 export function getTokenInvalidReason(token: string): MessageDescriptor | null {
-  if (values.length === 0) {
+  if (token.length === 0) {
     return messages.emptyToken;
   }
 
