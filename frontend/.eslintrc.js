@@ -36,6 +36,8 @@ module.exports = {
       extends: ['react-app/jest'],
       rules: {
         'import/first': 'off',
+        // TODO: remove before merge into master
+        'jest/no-commented-out-tests': 'off',
       },
     },
   ],
