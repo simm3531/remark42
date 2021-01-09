@@ -12,17 +12,10 @@ jest.mock('common/settings', () => ({
 }));
 
 describe('api', () => {
-  beforeAll(() => {
-    jestFetchMock.enableMocks();
-  });
-
-  afterAll(() => {
-    jestFetchMock.disableMocks();
-  });
-
   beforeEach(() => {
     jestFetchMock.resetMocks();
   });
+
   it('should send request with encoded email', async () => {
     await emailVerificationForSubscribe("address.!#$%&'*+-/=?^_`{|}~(),:;<>[\\]@example.com");
 

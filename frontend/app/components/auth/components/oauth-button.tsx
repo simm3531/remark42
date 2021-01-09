@@ -3,7 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { defineMessages, useIntl } from 'react-intl';
 import classnames from 'classnames';
 
-import type { OAuthProvider } from 'components/auth/fragments/auth-panel';
+import type { OAuthProvider } from 'common/types';
 import capitalizeFirstLetter from 'utils/capitalize-first-letter';
 
 import styles from './oauth-button.module.css';
@@ -23,9 +23,10 @@ if (process.env.NODE_ENV === 'development') {
 
 type OAuthIconProps = {
   provider: OAuthProvider;
+  onClick(evt: Event): void;
 };
 
-const OAuthButton: FunctionComponent<OAuthIconProps> = ({ provider }) => {
+const OAuthButton: FunctionComponent<OAuthIconProps> = ({ provider, onClick }) => {
   const intl = useIntl();
   const [icon, setIcon] = useState<string | null>(null);
 
@@ -57,6 +58,8 @@ const OAuthButton: FunctionComponent<OAuthIconProps> = ({ provider }) => {
 
   return (
     <button
+      onClick={onClick}
+      name={provider}
       className={classnames('oath-button', styles.root)}
       title={`${intl.formatMessage(messages.buttonTitle)} ${capitalizeFirstLetter(provider)}`}
       dangerouslySetInnerHTML={{ __html: icon }} // eslint-disable-line react/no-danger

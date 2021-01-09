@@ -111,6 +111,7 @@ export function unsetCommentMode(mode: StoreState['comments']['activeComment'] =
 export function updateSorting(sort: Sorting): StoreAction<void> {
   return async (dispath, getState) => {
     const { sort: prevSort } = getState().comments;
+
     dispath({ type: COMMENTS_SET_SORT, payload: sort });
 
     try {

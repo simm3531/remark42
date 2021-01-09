@@ -19,7 +19,7 @@ import { SubscribeByEmail } from './__subscribe-by-email';
 import { SubscribeByRSS } from './__subscribe-by-rss';
 
 import MarkdownToolbar from './markdown-toolbar';
-import TextareaAutosize from './textarea-autosize';
+import TextareaAutosize from '../textarea-autosize';
 import { TextExpander } from './text-expander';
 import { ReactComponent as MarkdownIcon } from './assets/markdown.svg';
 import styles from './comment-form.module.css';

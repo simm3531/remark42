@@ -1,6 +1,6 @@
 import { siteId, url } from './settings';
 import { BASE_URL, API_BASE } from './constants';
-import { Config, Comment, Tree, User, BlockedUser, Sorting, AuthProvider, BlockTTL, Image } from './types';
+import { Config, Comment, Tree, User, BlockedUser, Sorting, BlockTTL, Image } from './types';
 import fetcher from './fetcher';
 
 /* common */
@@ -29,9 +29,9 @@ export const sendEmailVerificationRequest = (username: string, address: string):
   return fetcher.get({ url, withCredentials: true, overriddenApiBase: '' });
 };
 
-export const logIn = (provider: AuthProvider): Promise<User | null> => {
-  if (provider.name === 'anonymous') return __loginAnonymously(provider.username);
-  if (provider.name === 'email') return __loginViaEmail(provider.token);
+export const logIn = (provider: { name: string; username?: string; token?: string }): Promise<User | null> => {
+  if (provider.name === 'anonymous') return __loginAnonymously(provider.username!);
+  if (provider.name === 'email') return __loginViaEmail(provider.token!);
 
   return new Promise<User | null>((resolve, reject) => {
     const url = `${BASE_URL}/auth/${provider.name}/login?from=${encodeURIComponent(

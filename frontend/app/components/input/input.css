@@ -7,6 +7,10 @@
   font-size: 16px;
   font-family: inherit;
 
+  &:hover {
+    border-color: var(--color32);
+  }
+
   &:focus {
     box-shadow: 0 0 0 2px var(--color47);
     border-color: var(--color15);

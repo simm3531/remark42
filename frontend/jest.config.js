@@ -13,13 +13,13 @@ module.exports = {
      * "transformIgnorePatterns" just don't work for modules down below
      * If you know how to handle it better PR welcome
      */
-    '^@github/markdown-toolbar-element$': 'identity-obj-proxy',
-    '^@github/text-expander-element$': 'identity-obj-proxy',
+    // '^@github/markdown-toolbar-element$': 'identity-obj-proxy',
+    // '^@github/text-expander-element$': 'identity-obj-proxy',
   },
   setupFiles: ['<rootDir>/jest.setup.ts'],
   setupFilesAfterEnv: [
-    'jest-localstorage-mock',
-    '<rootDir>/app/__mocks__/headers.ts',
+    '<rootDir>/app/__mocks__/localstorage.ts',
+    '<rootDir>/app/__mocks__/fetch.ts',
     '<rootDir>/app/__stubs__/remark-config.ts',
     '<rootDir>/app/__stubs__/static-config.ts',
   ],

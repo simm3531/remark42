@@ -3,7 +3,8 @@ import { useSelector } from 'react-redux';
 import b from 'bem-react-helper';
 import { IntlShape, useIntl, FormattedMessage, defineMessages } from 'react-intl';
 
-import type { AuthProvider, Sorting } from 'common/types';
+import type { Sorting } from 'common/types';
+import type { StoreState } from 'store';
 import {
   COMMENT_NODE_CLASSNAME_PREFIX,
   MAX_SHOWN_ROOT_COMMENTS,
@@ -14,7 +15,6 @@ import {
 import { maxShownComments, url } from 'common/settings';
 
 import { StaticStore } from 'common/static-store';
-import { StoreState } from 'store';
 import {
   fetchUser,
   logout,
@@ -144,8 +144,8 @@ export class Root extends Component<Props, State> {
     await this.props.updateSorting(sort);
   };
 
-  logIn = async (provider: AuthProvider) => {
-    const user = await this.props.logIn(provider);
+  logIn = async () => {
+    const user = await this.props.logIn();
 
     await this.props.fetchComments();
 
@@ -242,7 +242,6 @@ export class Root extends Component<Props, State> {
           onSortChange={this.changeSort}
           isCommentsDisabled={isCommentsDisabled}
           postInfo={this.props.info}
-          onSignIn={this.logIn}
           onSignOut={this.logOut}
           onBlockedUsersShow={this.onBlockedUsersShow}
           onBlockedUsersHide={this.onBlockedUsersHide}

@@ -21,6 +21,10 @@ const messages = defineMessages({
     id: 'auth.user-not-found',
     defaultMessage: 'No user was found',
   },
+  unexpectedError: {
+    id: 'auth.unexpected-error',
+    defaultMessage: 'Something went wrong. Please try again a bit later.',
+  },
   loading: {
     id: 'auth.loading',
     defaultMessage: 'Loading...',
@@ -33,6 +37,10 @@ const messages = defineMessages({
     id: 'auth.empty-token',
     defaultMessage: 'Token field must not be empty',
   },
+  invalidToken: {
+    id: 'auth.invalid-token',
+    defaultMessage: 'Token is invalid',
+  },
   emailAddress: {
     id: 'auth.email-address',
     defaultMessage: 'Email Address',
@@ -43,7 +51,7 @@ const messages = defineMessages({
   },
   login: {
     id: 'auth.login',
-    defaultMessage: 'Login',
+    defaultMessage: 'Sign In',
   },
 });
 export default messages;

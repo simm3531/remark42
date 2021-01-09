@@ -8,7 +8,7 @@ import * as localStorageModule from 'common/local-storage';
 
 import { CommentForm, CommentFormProps, messages } from './comment-form';
 import { SubscribeByEmail } from './__subscribe-by-email';
-import TextareaAutosize from './textarea-autosize';
+import TextareaAutosize from '../textarea-autosize';
 import { IntlShape } from 'react-intl';
 
 function createEvent<E extends Event, T = unknown>(type: string, value: T): E {

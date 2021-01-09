@@ -1,19 +1,63 @@
 .root {
   display: block;
   width: 100%;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .label {
   margin-bottom: 4px;
 }
 
-.error {
-  margin-top: 4px;
-  color: var(--error-color);
+.input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 6px 12px;
+  border-radius: 2px;
+
+  &:disabled:hover {
+    border-color: var(--color31);
+  }
 }
 
-.submit {
-  display: flex;
-  justify-content: center;
+.textarea {
+  width: 100%;
+  max-height: 200px;
+  box-sizing: border-box;
+  border: 1px solid var(--color31);
+  margin: 0;
+  padding: 4px 8px;
+  resize: vertical;
+  font-size: 16px;
+  font-family: inherit;
+
+  &:hover {
+    border-color: var(--color32);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px var(--color47);
+    border-color: var(--color15);
+    outline: none;
+  }
+
+  &:disabled:hover {
+    border-color: var(--color31);
+  }
+}
+
+.inputError {
+  &,
+  &:hover,
+  &:focus {
+    border-color: var(--error-color);
+    box-shadow: 0 0 0 2px var(--error-background);
+  }
+}
+
+.error {
+  padding: 4px 8px;
+  border-radius: 0 0 2px 2px;
+  background-color: var(--error-background);
+  box-shadow: 0 0 2px var(--error-background);
+  color: var(--error-color);
 }

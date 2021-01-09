@@ -63,5 +63,6 @@
   /* Named variables */
   --primary-color: 37, 156, 154;
   --white-color: 255, 255, 255;
-  --error-color: #9a0000;
+  --error-color: #cc0f35;
+  --error-background: #feecf0;
 }

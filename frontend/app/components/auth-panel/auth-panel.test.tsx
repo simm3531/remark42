@@ -13,8 +13,6 @@ import { Button } from '../button';
 import { StaticStore } from 'common/static-store';
 
 const DefaultProps = {
-  providers: ['google', 'github'],
-  provider: { name: null },
   postInfo: {
     read_only: false,
     url: 'https://example.com',
