@@ -1,5 +1,3 @@
-import './root.css';
-
 import './__copyright/root__copyright.css';
 import './__input/root__input.css';
 import './__preloader/root__preloader.css';

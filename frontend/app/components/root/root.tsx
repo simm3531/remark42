@@ -2,6 +2,7 @@ import { h, Component, FunctionComponent, Fragment } from 'preact';
 import { useSelector } from 'react-redux';
 import b from 'bem-react-helper';
 import { IntlShape, useIntl, FormattedMessage, defineMessages } from 'react-intl';
+import classnames from 'classnames';
 
 import type { Sorting } from 'common/types';
 import type { StoreState } from 'store';
@@ -42,6 +43,8 @@ import { bindActions } from 'utils/actionBinder';
 import postMessage from 'utils/postMessage';
 import { useActions } from 'hooks/useAction';
 import { setCollapse } from 'store/thread/actions';
+
+import styles from './root.module.css';
 
 const mapStateToProps = (state: StoreState) => ({
   sort: state.comments.sort,
@@ -221,18 +224,13 @@ export class Root extends Component<Props, State> {
     });
   };
 
-  /**
-   * Defines whether current client is logged in via `Anonymous provider`
-   */
-  isAnonymous = () => isUserAnonymous(this.props.user);
-
   render(props: Props, { isUserLoading, commentsShown, isSettingsVisible }: State) {
     if (isUserLoading) {
       return <Preloader mix="root__preloader" />;
     }
 
     const isCommentsDisabled = props.info.read_only!;
-    const imageUploadHandler = this.isAnonymous() ? undefined : this.props.uploadImage;
+    const imageUploadHandler = isUserAnonymous(this.props.user) ? undefined : this.props.uploadImage;
 
     return (
       <Fragment>
@@ -298,7 +296,7 @@ export class Root extends Component<Props, State> {
                 </div>
               )}
 
-              {!!this.props.topComments.length && !props.isCommentsLoading && (
+              {!!this.props.topComments.length && !props.isCommentsLoading ? (
                 <div className="root__threads" role="list">
                   {(IS_MOBILE && commentsShown < this.props.topComments.length
                     ? this.props.topComments.slice(0, commentsShown)
@@ -319,6 +317,8 @@ export class Root extends Component<Props, State> {
                     </Button>
                   )}
                 </div>
+              ) : (
+                <div className={styles.noComments}>No commets. Your comment could be first!</div>
               )}
 
               {props.isCommentsLoading && (
@@ -347,7 +347,7 @@ export const ConnectedRoot: FunctionComponent = () => {
   const intl = useIntl();
 
   return (
-    <div className={b('root', {}, { theme: props.theme })}>
+    <div className={classnames(styles.root, b('root', {}, { theme: props.theme }))}>
       <Root {...props} {...actions} intl={intl} />
       <p className="root__copyright" role="contentinfo">
         <FormattedMessage
