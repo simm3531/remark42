@@ -72,7 +72,7 @@ function oauthSignin(provider: Provider): Promise<User> {
   authChecker = new Promise((resolve, reject) => {
     (function checkStatus() {
       setTimeout(async () => {
-        if (!window.closed || timePassed < MAX_WAITING_TIME) {
+        if (!authWindow?.closed && timePassed < MAX_WAITING_TIME) {
           checkStatus();
           return;
         }
@@ -81,13 +81,14 @@ function oauthSignin(provider: Provider): Promise<User> {
           const user = await getUser();
 
           if (user === null) {
-            return reject();
+            reject();
+          } else {
+            resolve(user);
           }
-
-          resolve(user);
         } catch (e) {
           reject(e);
         }
+
         authChecker = null;
         authWindow = null;
       }, CHECK_DELAY);
@@ -121,13 +122,14 @@ const Form: FunctionComponent<FormProps> = ({ oauthProviders, formProviders, onS
   const [usernameInvalidReason, setUsernameInvalidReason] = useState<MessageDescriptor | null>(null);
 
   const handleOauthClick = async (evt: Event) => {
-    const { name } = evt.target as HTMLButtonElement;
+    const { name } = evt.currentTarget as HTMLButtonElement;
+
     evt.preventDefault();
     await oauthSignin(name as OAuthProvider);
   };
 
   const handleProviderChange = (evt: Event) => {
-    const { value } = evt.target as HTMLInputElement;
+    const { value } = evt.currentTarget as HTMLInputElement;
 
     setInvalidReason(null);
     setUsernameInvalidReason(null);
@@ -136,7 +138,7 @@ const Form: FunctionComponent<FormProps> = ({ oauthProviders, formProviders, onS
   };
 
   const handleUsernameChange = (evt: Event) => {
-    const { value } = evt.target as HTMLInputElement;
+    const { value } = evt.currentTarget as HTMLInputElement;
 
     setInvalidReason(null);
     setUsernameInvalidReason(null);
@@ -144,7 +146,7 @@ const Form: FunctionComponent<FormProps> = ({ oauthProviders, formProviders, onS
   };
 
   const handleEmailChange = (evt: Event) => {
-    const { value } = evt.target as HTMLInputElement;
+    const { value } = evt.currentTarget as HTMLInputElement;
 
     setInvalidReason(null);
     setEmailInvalidReason(null);
@@ -152,7 +154,7 @@ const Form: FunctionComponent<FormProps> = ({ oauthProviders, formProviders, onS
   };
 
   const handleTokenChange = (evt: Event) => {
-    const { value } = evt.target as HTMLInputElement;
+    const { value } = evt.currentTarget as HTMLInputElement;
 
     setInvalidReason(null);
     setTokenInvalidReason(null);

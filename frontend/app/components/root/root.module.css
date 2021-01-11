@@ -1,0 +1,21 @@
+.root {
+  position: relative;
+  font-family: 'PT Sans', Helvetica, Arial, sans-serif;
+
+  &::selection {
+    background: var(--color42);
+  }
+}
+
+.rootUserInfo {
+  position: static;
+}
+
+.noComments {
+  position: relative;
+  display: flex;
+  height: 240px;
+  justify-content: center;
+  align-items: center;
+  color: var(--color10);
+}
