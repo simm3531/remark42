@@ -38,7 +38,7 @@ const OAuthButton: FunctionComponent<OAuthIconProps> = ({ provider, onClick }) =
       return;
     }
 
-    fetch(url)
+    fetch(`./${url}`)
       .then((res) => res.text())
       .then((icon) => {
         if (!mounted) {

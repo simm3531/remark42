@@ -7,7 +7,7 @@
   "auth.length-limit": "Username must be at least 3 characters long",
   "auth.loading": "Loading...",
   "auth.login": "Sign In",
-  "auth.submit": "Submit",
+  "auth.signin": "Sign In",
   "auth.symbol-limit": "Username must contain only letters, numbers, underscores or spaces",
   "auth.token": "Token",
   "auth.unexpected-error": "Something went wrong. Please try again a bit later.",

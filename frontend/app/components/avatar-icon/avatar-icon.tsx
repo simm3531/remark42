@@ -13,6 +13,7 @@ export function AvatarIcon(props: Props & JSX.HTMLAttributes) {
     <img
       className={b('avatar-icon', { mix: props.mix }, { theme: props.theme, default: !props.picture })}
       src={props.picture || require('./avatar-icon.svg')}
+      loading="lazy"
       alt=""
     />
   );
