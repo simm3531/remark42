@@ -16,16 +16,7 @@ import {
 import { maxShownComments, url } from 'common/settings';
 
 import { StaticStore } from 'common/static-store';
-import {
-  fetchUser,
-  logout,
-  logIn,
-  blockUser,
-  unblockUser,
-  fetchBlockedUsers,
-  hideUser,
-  unhideUser,
-} from 'store/user/actions';
+import { fetchUser, logout, blockUser, unblockUser, fetchBlockedUsers, hideUser, unhideUser } from 'store/user/actions';
 import { fetchComments, updateSorting, addComment, updateComment } from 'store/comments/actions';
 import { setCommentsReadOnlyState } from 'store/post-info/actions';
 import { setTheme } from 'store/theme/actions';
@@ -73,8 +64,7 @@ const boundActions = bindActions({
   fetchComments,
   fetchUser,
   fetchBlockedUsers,
-  logIn,
-  logOut: logout,
+  logout,
   setTheme,
   setCommentsReadOnlyState,
   blockUser,
@@ -147,16 +137,8 @@ export class Root extends Component<Props, State> {
     await this.props.updateSorting(sort);
   };
 
-  logIn = async () => {
-    const user = await this.props.logIn();
-
-    await this.props.fetchComments();
-
-    return user;
-  };
-
-  logOut = async () => {
-    await this.props.logOut();
+  logout = async () => {
+    await this.props.logout();
     localStorage.removeItem(LS_EMAIL_KEY);
     await this.props.fetchComments();
   };
@@ -240,7 +222,7 @@ export class Root extends Component<Props, State> {
           onSortChange={this.changeSort}
           isCommentsDisabled={isCommentsDisabled}
           postInfo={this.props.info}
-          onSignOut={this.logOut}
+          onSignOut={this.logout}
           onBlockedUsersShow={this.onBlockedUsersShow}
           onBlockedUsersHide={this.onBlockedUsersHide}
           onCommentsChangeReadOnlyMode={this.props.setCommentsReadOnlyState}

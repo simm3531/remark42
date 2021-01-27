@@ -1,3 +1,4 @@
+import { RequestError } from 'utils/errorUtils';
 import fetcher from './fetcher';
 
 describe('fetcher', () => {
@@ -60,11 +61,11 @@ describe('fetcher', () => {
       }));
 
       return fetcher
-        .get({ url: '/api/some', logError: false })
+        .get('/api/some')
         .then((data) => {
           throw new Error('Request should be failed');
         })
-        .catch((e) => {
+        .catch((e: RequestError) => {
           expect(e.code).toBe(0);
           expect(e.error).toBe('Something went wrong.');
         });

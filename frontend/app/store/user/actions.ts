@@ -33,18 +33,13 @@ export const fetchUser = (): StoreAction<Promise<User | null>> => async (dispatc
   return user;
 };
 
-export const logIn = (): StoreAction<Promise<User | null>> => async (dispatch) => {
-  // const user = await api.logIn(provider);
-  const user = {} as User;
-
+export const signin = (user: User): StoreAction<Promise<void>> => async (dispatch) => {
   dispatch(setUser(user));
   dispatch(fetchComments());
-
-  return user;
 };
 
 export const logout = (): StoreAction<Promise<void>> => async (dispatch) => {
-  await api.logOut();
+  await api.logout();
   dispatch(unsetCommentMode());
   dispatch(setUser());
 };

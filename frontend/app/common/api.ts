@@ -3,86 +3,16 @@ import { BASE_URL, API_BASE } from './constants';
 import { Config, Comment, Tree, User, BlockedUser, Sorting, BlockTTL, Image } from './types';
 import fetcher from './fetcher';
 
-/* common */
-const __loginAnonymously = (username: string): Promise<User | null> => {
-  const url = `/auth/anonymous/login?user=${encodeURIComponent(username)}&aud=${siteId}&from=${encodeURIComponent(
-    `${window.location.origin}${window.location.pathname}?selfClose`
-  )}`;
-  return fetcher.get<User>({ url, withCredentials: true, overriddenApiBase: '' });
-};
+export const getConfig = (): Promise<Config> => fetcher.get('/config');
 
-const __loginViaEmail = (token: string): Promise<User | null> => {
-  const url = `/auth/email/login?token=${token}`;
-  return fetcher.get<User>({ url, withCredentials: true, overriddenApiBase: '' });
-};
+export const logout = (): Promise<void> => fetcher.get('/auth/logout', { overriddenApiBase: '' });
 
-/**
- * First step of two of `email` authorization
- *
- * @param username userrname
- * @param address email address
- */
-export const sendEmailVerificationRequest = (username: string, address: string): Promise<void> => {
-  const url = `/auth/email/login?id=${siteId}&user=${encodeURIComponent(username)}&address=${encodeURIComponent(
-    address
-  )}`;
-  return fetcher.get({ url, withCredentials: true, overriddenApiBase: '' });
-};
+export const getPostComments = (sort: Sorting) => fetcher.get<Tree>(`/find?url=${url}&sort=${sort}&format=tree`);
 
-export const logIn = (provider: { name: string; username?: string; token?: string }): Promise<User | null> => {
-  if (provider.name === 'anonymous') return __loginAnonymously(provider.username!);
-  if (provider.name === 'email') return __loginViaEmail(provider.token!);
+export const getCommentsCount = (urls: string[]): Promise<{ url: string; count: number }[]> =>
+  fetcher.post('/counts', { json: urls });
 
-  return new Promise<User | null>((resolve, reject) => {
-    const url = `${BASE_URL}/auth/${provider.name}/login?from=${encodeURIComponent(
-      `${window.location.origin}${window.location.pathname}?selfClose`
-    )}&site=${siteId}`;
-
-    const newWindow = window.open(url);
-
-    let secondsPass = 0;
-    const checkMsDelay = 300;
-    const checkInterval = setInterval(() => {
-      let shouldProceed;
-      secondsPass += checkMsDelay;
-      try {
-        shouldProceed = (newWindow && newWindow.closed) || secondsPass > 30000;
-      } catch (e) {}
-
-      if (shouldProceed) {
-        clearInterval(checkInterval);
-
-        getUser()
-          .then((user) => {
-            resolve(user);
-          })
-          .catch(() => {
-            reject(new Error('User logIn Error'));
-          });
-      }
-    }, checkMsDelay);
-  });
-};
-
-export const logOut = (): Promise<void> =>
-  fetcher.get({ url: `/auth/logout`, overriddenApiBase: '', withCredentials: true });
-
-export const getConfig = (): Promise<Config> => fetcher.get(`/config`);
-
-export const getPostComments = (sort: Sorting) =>
-  fetcher.get<Tree>({
-    url: `/find?site=${siteId}&url=${url}&sort=${sort}&format=tree`,
-    withCredentials: true,
-  });
-
-export const getCommentsCount = (siteId: string, urls: string[]): Promise<{ url: string; count: number }[]> =>
-  fetcher.post({
-    url: `/counts?site=${siteId}`,
-    body: urls,
-  });
-
-export const getComment = (id: Comment['id']): Promise<Comment> =>
-  fetcher.get({ url: `/id/${id}?url=${url}`, withCredentials: true });
+export const getComment = (id: Comment['id']): Promise<Comment> => fetcher.get(`/id/${id}?url=${url}`);
 
 export const getUserComments = (
   userId: User['id'],
@@ -90,17 +20,10 @@ export const getUserComments = (
 ): Promise<{
   comments: Comment[];
   count: number;
-}> =>
-  fetcher.get({
-    url: `/comments?user=${userId}&limit=${limit}`,
-    withCredentials: true,
-  });
+}> => fetcher.get(`/comments?user=${userId}&limit=${limit}`);
 
 export const putCommentVote = ({ id, value }: { id: Comment['id']; value: number }): Promise<void> =>
-  fetcher.put({
-    url: `/vote/${id}?url=${url}&vote=${value}`,
-    withCredentials: true,
-  });
+  fetcher.put(`/vote/${id}?url=${url}&vote=${value}`);
 
 export const addComment = ({
   title,
@@ -111,9 +34,8 @@ export const addComment = ({
   text: string;
   pid?: Comment['id'];
 }): Promise<Comment> =>
-  fetcher.post({
-    url: '/comment',
-    body: {
+  fetcher.post('/comment', {
+    json: {
       title,
       text,
       locator: {
@@ -122,92 +44,33 @@ export const addComment = ({
       },
       ...(pid ? { pid } : {}),
     },
-    withCredentials: true,
   });
 
 export const updateComment = ({ text, id }: { text: string; id: Comment['id'] }): Promise<Comment> =>
-  fetcher.put({
-    url: `/comment/${id}?url=${url}`,
-    body: {
-      text,
-    },
-    withCredentials: true,
-  });
+  fetcher.put(`/comment/${id}?url=${url}`, { json: { text } });
 
-export const getPreview = (text: string): Promise<string> =>
-  fetcher.post({
-    url: '/preview',
-    body: {
-      text,
-    },
-    withCredentials: true,
-  });
+export const getPreview = (text: string): Promise<string> => fetcher.post('/preview', { json: { text } });
 
-export const getUser = (): Promise<User | null> =>
-  fetcher
-    .get<User | null>({
-      url: '/user',
-      withCredentials: true,
-      logError: false,
-    })
-    .catch(() => null);
+export const getUser = (): Promise<User | null> => fetcher.get<User | null>('/user').catch(() => null);
 
 /* GDPR */
 
 export const deleteMe = (): Promise<{
   user_id: string;
   link: string;
-}> =>
-  fetcher.post({
-    url: `/deleteme?site=${siteId}`,
-    withCredentials: true,
-  });
+}> => fetcher.post(`/deleteme?site=${siteId}`);
 
-export const approveDeleteMe = (token: string): Promise<void> =>
-  fetcher.get({
-    url: `/admin/deleteme?token=${token}`,
-    withCredentials: true,
-  });
+export const approveDeleteMe = (token: string): Promise<void> => fetcher.get(`/admin/deleteme?token=${token}`);
 
 /* admin */
-export const pinComment = (id: Comment['id']): Promise<void> =>
-  fetcher.put({
-    url: `/admin/pin/${id}?url=${url}&pin=1`,
-    withCredentials: true,
-  });
-
-export const unpinComment = (id: Comment['id']): Promise<void> =>
-  fetcher.put({
-    url: `/admin/pin/${id}?url=${url}&pin=0`,
-    withCredentials: true,
-  });
-
-export const setVerifiedStatus = (id: User['id']): Promise<void> =>
-  fetcher.put({
-    url: `/admin/verify/${id}?verified=1`,
-    withCredentials: true,
-  });
-
-export const removeVerifiedStatus = (id: User['id']): Promise<void> =>
-  fetcher.put({
-    url: `/admin/verify/${id}?verified=0`,
-    withCredentials: true,
-  });
-
-export const removeComment = (id: Comment['id']) =>
-  fetcher.delete({
-    url: `/admin/comment/${id}?url=${url}`,
-    withCredentials: true,
-  });
+export const pinComment = (id: Comment['id']): Promise<void> => fetcher.put(`/admin/pin/${id}?url=${url}&pin=1`);
+export const unpinComment = (id: Comment['id']): Promise<void> => fetcher.put(`/admin/pin/${id}?url=${url}&pin=0`);
+export const setVerifiedStatus = (id: User['id']): Promise<void> => fetcher.put(`/admin/verify/${id}?verified=1`);
+export const removeVerifiedStatus = (id: User['id']): Promise<void> => fetcher.put(`/admin/verify/${id}?verified=0`);
+export const removeComment = (id: Comment['id']): Promise<void> => fetcher.delete(`/admin/comment/${id}?url=${url}`);
 
 export const removeMyComment = (id: Comment['id']): Promise<void> =>
-  fetcher.put({
-    url: `/comment/${id}?url=${url}`,
-    body: {
-      delete: true,
-    } as object,
-    withCredentials: true,
-  });
+  fetcher.put(`/comment/${id}?url=${url}`, { json: { delete: true } });
 
 export const blockUser = (
   id: User['id'],
@@ -216,11 +79,7 @@ export const blockUser = (
   block: boolean;
   site_id: string;
   user_id: string;
-}> =>
-  fetcher.put({
-    url: ttl === 'permanently' ? `/admin/user/${id}?block=1` : `/admin/user/${id}?block=1&ttl=${ttl}`,
-    withCredentials: true,
-  });
+}> => fetcher.put(ttl === 'permanently' ? `/admin/user/${id}?block=1` : `/admin/user/${id}?block=1&ttl=${ttl}`);
 
 export const unblockUser = (
   id: User['id']
@@ -228,39 +87,21 @@ export const unblockUser = (
   block: boolean;
   site_id: string;
   user_id: string;
-}> =>
-  fetcher.put({
-    url: `/admin/user/${id}?block=0`,
-    withCredentials: true,
-  });
+}> => fetcher.put(`/admin/user/${id}?block=0`);
 
-export const getBlocked = (): Promise<BlockedUser[] | null> =>
-  fetcher.get({
-    url: '/admin/blocked',
-    withCredentials: true,
-  });
+export const getBlocked = (): Promise<BlockedUser[] | null> => fetcher.get('/admin/blocked');
 
-export const disableComments = (): Promise<void> =>
-  fetcher.put({
-    url: `/admin/readonly?site=${siteId}&url=${url}&ro=1`,
-    withCredentials: true,
-  });
+export const disableComments = (): Promise<void> => fetcher.put(`/admin/readonly?url=${url}&ro=1`);
 
-export const enableComments = (): Promise<void> =>
-  fetcher.put({
-    url: `/admin/readonly?site=${siteId}&url=${url}&ro=0`,
-    withCredentials: true,
-  });
+export const enableComments = (): Promise<void> => fetcher.put(`/admin/readonly?url=${url}&ro=0`);
 
 export const uploadImage = (image: File): Promise<Image> => {
   const data = new FormData();
   data.append('file', image);
 
   return fetcher
-    .post<{ id: string }>({
-      url: `/picture`,
-      withCredentials: true,
-      contentType: 'multipart/form-data',
+    .post<{ id: string }>(`/picture`, {
+      headers: { 'Content-Type': 'multipart/form-data' },
       body: data,
     })
     .then((resp) => ({
@@ -276,19 +117,16 @@ export const uploadImage = (image: File): Promise<Image> => {
  * @param emailAddress email for subscription
  */
 export const emailVerificationForSubscribe = (emailAddress: string) =>
-  fetcher.post({
-    url: `/email/subscribe?site=${siteId}&address=${encodeURIComponent(emailAddress)}`,
-    withCredentials: true,
-  });
+  fetcher.post(`/email/subscribe?address=${encodeURIComponent(emailAddress)}`);
 
 /**
  * Confirmation of email subscription to updates
  * @param token confirmation token from email
  */
 export const emailConfirmationForSubscribe = (token: string) =>
-  fetcher.post({ url: `/email/confirm?site=${siteId}&tkn=${encodeURIComponent(token)}`, withCredentials: true });
+  fetcher.post(`/email/confirm?tkn=${encodeURIComponent(token)}`);
 
 /**
  * Decline current subscription to updates
  */
-export const unsubscribeFromEmailUpdates = () => fetcher.delete({ url: `/email`, withCredentials: true });
+export const unsubscribeFromEmailUpdates = (): Promise<void> => fetcher.delete(`/email`);

@@ -1,4 +1,4 @@
-describe('<AuthPanel/>', () => {
+describe('<Auth/>', () => {
   it('empty test', () => {
     expect(true).toBe(true);
   });

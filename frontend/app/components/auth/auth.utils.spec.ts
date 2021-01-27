@@ -1,5 +1,5 @@
-import messages from './messsages';
-import { getUsernameInvalidReason, getEmailInvalidReason } from './utils';
+import messages from './auth.messsages';
+import { getUsernameInvalidReason, getEmailInvalidReason } from './auth.utils';
 
 describe('getUsernameInvalidReason', () => {
   it('should return message about min length', () => {

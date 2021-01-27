@@ -4,6 +4,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import classnames from 'classnames';
 
 import type { OAuthProvider } from 'common/types';
+import { siteId } from 'common/settings';
 import capitalizeFirstLetter from 'utils/capitalize-first-letter';
 
 import styles from './oauth-button.module.css';
@@ -17,13 +18,15 @@ const OAUTH_ICONS: Record<string, string> = {
   yandex: require('./assets/yandex.svg').default as string,
 };
 
+const location = encodeURIComponent(`${window.location.origin}${window.location.pathname}?selfClose`);
+
 if (process.env.NODE_ENV === 'development') {
   Object.assign(OAUTH_ICONS, { dev: require('./assets/dev.svg').default as string });
 }
 
 type OAuthIconProps = {
+  onClick(evt: MouseEvent): void;
   provider: OAuthProvider;
-  onClick(evt: Event): void;
 };
 
 const OAuthButton: FunctionComponent<OAuthIconProps> = ({ provider, onClick }) => {
@@ -38,7 +41,7 @@ const OAuthButton: FunctionComponent<OAuthIconProps> = ({ provider, onClick }) =
       return;
     }
 
-    fetch(`./${url}`)
+    fetch(url)
       .then((res) => res.text())
       .then((icon) => {
         if (!mounted) {
@@ -57,9 +60,11 @@ const OAuthButton: FunctionComponent<OAuthIconProps> = ({ provider, onClick }) =
   }
 
   return (
-    <button
+    <a
+      target="_blank"
+      rel="noopener noreferrer"
+      href={`/auth/${provider}/login?from=${location}&site=${siteId}`}
       onClick={onClick}
-      name={provider}
       className={classnames('oath-button', styles.root)}
       title={`${intl.formatMessage(messages.buttonTitle)} ${capitalizeFirstLetter(provider)}`}
       dangerouslySetInnerHTML={{ __html: icon }} // eslint-disable-line react/no-danger
